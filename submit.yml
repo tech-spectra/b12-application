@@ -1,0 +1,25 @@
+ame: Submit Application
+ 
+on:
+  workflow_dispatch:   # run manually, or change to push / schedule as needed
+ 
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+ 
+      - name: Run submission script
+        env:
+          # The signing secret is stored as a repository secret called SIGNING_SECRET.
+          # Go to Settings → Secrets and variables → Actions → New repository secret.
+          SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+ 
+          # These two are injected automatically by GitHub Actions.
+          REPOSITORY_LINK: ${{ github.server_url }}/${{ github.repository }}
+          ACTION_RUN_LINK:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+ 
+        run: python submit.py
+ 
